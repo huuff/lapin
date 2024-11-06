@@ -23,6 +23,7 @@ openssl                   = ["amq-protocol/openssl"]
 rustls                    = ["amq-protocol/rustls"]
 rustls-native-certs       = ["amq-protocol/rustls-native-certs"]
 rustls-webpki-roots-certs = ["amq-protocol/rustls-webpki-roots-certs"]
+tokio-runtime             = ["dep:tokio-executor-trait", "dep:tokio-reactor-trait"]
 vendored-openssl          = ["amq-protocol/vendored-openssl"]
 
 # rustls crypto providers. Choose at least one. Otherwise, runtime errors.
@@ -63,6 +64,14 @@ features = ["derive"]
 [dependencies.tracing]
 version = "^0.1"
 default-features = false
+
+[dependencies.tokio-executor-trait]
+version = "^2.1"
+optional = true
+
+[dependencies.tokio-reactor-trait]
+version = "=2.0.0-alpha.2"
+optional = true
 
 [dependencies]
 async-trait = "^0.1.42"

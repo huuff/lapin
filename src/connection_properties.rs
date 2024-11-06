@@ -16,6 +16,7 @@ pub struct ConnectionProperties {
     pub recovery_config: Option<RecoveryConfig>,
 }
 
+#[cfg(not(feature = "tokio-runtime"))]
 impl Default for ConnectionProperties {
     fn default() -> Self {
         Self {
@@ -27,6 +28,20 @@ impl Default for ConnectionProperties {
         }
     }
 }
+
+#[cfg(feature = "tokio-runtime")]
+impl Default for ConnectionProperties {
+    fn default() -> Self {
+        Self {
+            locale: "en_US".into(),
+            client_properties: FieldTable::default(),
+            executor: Some(Arc::new(tokio_executor_trait::Tokio::current())),
+            reactor: Some(Arc::new(tokio_reactor_trait::Tokio)),
+            recovery_config: None,
+        }
+    }
+}
+
 
 impl ConnectionProperties {
     #[must_use]

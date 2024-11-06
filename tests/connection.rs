@@ -50,7 +50,12 @@ fn connection() {
 
     let addr = std::env::var("AMQP_ADDR").unwrap_or_else(|_| "amqp://127.0.0.1:5672/%2f".into());
 
-    async_global_executor::block_on(async {
+    #[cfg(not(feature = "tokio-runtime"))]
+    let run_in_runtime = |future| async_global_executor::block_on(future); 
+    #[cfg(feature = "tokio-runtime")]
+    let run_in_runtime = |future| tokio::runtime::Runtime::new().unwrap().block_on(future); 
+    // async_global_executor::block_on(async {
+    run_in_runtime(async {
         let conn = Connection::connect(&addr, ConnectionProperties::default())
             .await
             .expect("connection error");
